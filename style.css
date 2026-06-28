@@ -164,6 +164,17 @@ button:hover:not(:disabled) {
     transform: scale(1.1);
 }
 
+.footer-links a {
+    margin: 0 10px; /* Adds 10px spacing on the left and right of each icon */
+    display: inline-block; /* Ensures they sit side-by-side */
+    transition: transform 0.2s;
+}
+
+/* Optional: If you want the About icon to also be white */
+.footer-links a img {
+    filter: invert(1);
+}
+
 .seo-box {
     margin-top: 2rem;
     padding: 1.5rem;
