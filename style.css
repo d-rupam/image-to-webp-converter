@@ -142,7 +142,28 @@ button:hover:not(:disabled) {
     display: none; 
 }
 
-.footer-links { text-align: center; margin-top: 2rem; }
+/* Footer Positioning */
+.footer-links {
+    margin-top: 2rem;
+    text-align: center;
+    width: 100%;
+    padding-bottom: 2rem;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}
+
+.footer-links:hover {
+    opacity: 1;
+}
+
+.footer-links img {
+    filter: invert(1); /* This turns any black icon into pure white */
+    transition: transform 0.2s;
+}
+
+.footer-links img:hover {
+    transform: scale(1.1);
+}
 
 .seo-box {
     margin-top: 2rem;
