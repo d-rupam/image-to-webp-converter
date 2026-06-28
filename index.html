@@ -9,11 +9,14 @@
         :root { --primary: #6366f1; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
         .container { background: var(--card); padding: 2rem; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.3); width: 90%; max-width: 400px; text-align: center; }
-        h1 { margin-top: 0; color: var(--primary); }
-        .box { border: 2px dashed #475569; padding: 2rem; border-radius: 0.5rem; margin: 1rem 0; cursor: pointer; transition: 0.3s; }
-        .box:hover { border-color: var(--primary); }
-        button { background: var(--primary); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 0.5rem; cursor: pointer; font-weight: bold; margin-top: 1rem; width: 100%; display: none; }
-        #stats { margin-top: 1rem; font-size: 0.9rem; color: #94a3b8; }
+        
+        .upload-area { border: 2px dashed #475569; padding: 2rem; border-radius: 0.5rem; margin-bottom: 1.5rem; cursor: pointer; transition: 0.3s; }
+        .upload-area:hover { border-color: var(--primary); }
+        
+        button { background: var(--primary); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 0.5rem; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; transition: 0.2s; }
+        button:disabled { background: #475569; cursor: not-allowed; }
+        
+        #stats { margin-top: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 0.5rem; display: none; }
         #upload { display: none; }
     </style>
 </head>
@@ -21,36 +24,57 @@
 
 <div class="container">
     <h1>🧬 Codon Engine</h1>
-    <label for="upload" class="box">Click to select image</label>
+    
+    <label for="upload" class="upload-area" id="drop-zone">Click to select image</label>
     <input type="file" id="upload" accept="image/*">
+    
+    <button id="convert-btn" disabled>Convert to WebP</button>
+    <a id="download-link" style="display:none; text-decoration:none;">
+        <button style="background: #10b981;">Download WebP</button>
+    </a>
+
     <div id="stats"></div>
-    <a id="download" style="text-decoration:none;"><button id="btn">Download WebP</button></a>
 </div>
 
 <script>
     const upload = document.getElementById('upload');
-    const btn = document.getElementById('btn');
+    const convertBtn = document.getElementById('convert-btn');
+    const downloadLink = document.getElementById('download-link');
     const stats = document.getElementById('stats');
-    const download = document.getElementById('download');
+    const dropZone = document.getElementById('drop-zone');
 
+    let selectedFile = null;
+
+    // Handle File Selection
     upload.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+        selectedFile = e.target.files[0];
+        if (selectedFile) {
+            dropZone.textContent = "Selected: " + selectedFile.name;
+            convertBtn.disabled = false;
+            stats.style.display = 'none';
+            downloadLink.style.display = 'none';
+        }
+    });
 
-        new Compressor(file, {
+    // Handle Conversion
+    convertBtn.addEventListener('click', () => {
+        if (!selectedFile) return;
+
+        new Compressor(selectedFile, {
             quality: 0.8,
             mimeType: 'image/webp',
             success(result) {
                 const url = URL.createObjectURL(result);
-                download.href = url;
-                download.download = file.name.replace(/\.[^/.]+$/, "") + ".webp";
-                btn.style.display = 'block';
+                downloadLink.href = url;
+                downloadLink.download = selectedFile.name.replace(/\.[^/.]+$/, "") + ".webp";
+                downloadLink.style.display = 'block';
                 
-                const initialSize = (file.size / 1024).toFixed(2);
+                const initialSize = (selectedFile.size / 1024).toFixed(2);
                 const finalSize = (result.size / 1024).toFixed(2);
-                const saved = (((file.size - result.size) / file.size) * 100).toFixed(1);
+                const saved = (((selectedFile.size - result.size) / selectedFile.size) * 100).toFixed(1);
                 
-                stats.innerHTML = `Original: ${initialSize}KB<br>Converted: ${finalSize}KB<br><b>Saved: ${saved}%</b>`;
+                stats.style.display = 'block';
+                stats.innerHTML = `Original: ${initialSize}KB<br>Converted: ${finalSize}KB<br><strong>Saved: ${saved}%</strong>`;
             },
         });
     });
