@@ -155,23 +155,24 @@ button:hover:not(:disabled) {
     opacity: 1;
 }
 
-.footer-links img {
-    filter: invert(1); /* This turns any black icon into pure white */
-    transition: transform 0.2s;
-}
-
-.footer-links img:hover {
-    transform: scale(1.1);
-}
-
 .footer-links a {
-    margin: 0 10px; /* Adds 10px spacing on the left and right of each icon */
-    display: inline-block; /* Ensures they sit side-by-side */
+    margin: 0 10px;
+    display: inline-block;
     transition: transform 0.2s;
 }
 
 .footer-links a img {
+    width: 30px; /* Standardize icon size */
+    transition: transform 0.2s;
+}
+
+/* Only invert the GitHub icon to white */
+.github-icon {
     filter: invert(1);
+}
+
+.footer-links a img:hover {
+    transform: scale(1.1);
 }
 
 .seo-box {
