@@ -12,58 +12,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentFile = null; 
 
-    // ==========================================
-    // 🧬 STATE 1: RESET / LOAD FILE
-    // ==========================================
     function resetUI() {
         currentFile = null;
         upload.value = ''; 
         dropText.style.display = 'block';
         previewImage.style.display = 'none';
         previewImage.src = '';
-        
         convertBtn.style.display = 'block';
         convertBtn.textContent = "Convert to WebP";
         convertBtn.disabled = true;
-        
         downloadLink.style.display = 'none';
         stats.style.display = 'none';
         resetBtn.style.display = 'none';
         progressWrap.style.display = 'none';
-        
-        // Reset bar transition and width
         progressBar.style.transition = 'none';
         progressBar.style.width = '0%';
     }
-    
+
     function processInputFile(file) {
-        if (!file || !file.type.startsWith('image/')) {
-            alert('Please provide a valid image file.');
-            return;
-        }
-        
+        if (!file || !file.type.startsWith('image/')) return;
         resetUI(); 
         currentFile = file;
         convertBtn.disabled = false;
-        
         dropText.style.display = 'none';
-        const previewUrl = URL.createObjectURL(file);
-        previewImage.src = previewUrl;
+        previewImage.src = URL.createObjectURL(file);
         previewImage.style.display = 'block';
     }
 
     resetBtn.addEventListener('click', resetUI);
 
-    // ==========================================
     // INPUT LISTENERS
-    // ==========================================
     upload.addEventListener('change', (e) => {
         if (e.target.files.length > 0) processInputFile(e.target.files[0]);
     });
 
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
-        document.body.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
     });
 
     dropZone.addEventListener('drop', (e) => {
@@ -71,63 +55,47 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.addEventListener('paste', (e) => {
-        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-        for (let index in items) {
-            const item = items[index];
-            if (item.kind === 'file' && item.type.startsWith('image/')) {
-                const blob = item.getAsFile();
-                const file = new File([blob], "clipboard-capture-" + Date.now() + ".png", { type: item.type });
-                processInputFile(file);
-                break; 
+        const items = e.clipboardData.items;
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].kind === 'file' && items[i].type.startsWith('image/')) {
+                processInputFile(items[i].getAsFile());
+                break;
             }
         }
     });
 
-    // ==========================================
-    // ⚙️ CONVERSION ENGINE (Optimized Flow)
-    // ==========================================
-convertBtn.addEventListener('click', () => {
+    // CONVERSION ENGINE (Restored to working status)
+    convertBtn.addEventListener('click', () => {
         if (!currentFile) return;
 
         convertBtn.textContent = "Converting...";
         convertBtn.disabled = true;
         progressWrap.style.display = 'block';
-        
-        // Reset and start the flow immediately
-        progressBar.style.transition = 'width 2.5s cubic-bezier(0.1, 0.7, 0.3, 1)';
+        progressBar.style.transition = 'width 1.5s linear';
         progressBar.style.width = '100%';
 
         new Compressor(currentFile, {
             quality: 0.8,
             mimeType: 'image/webp',
             success(result) {
-                // When compression finishes, wait for the bar to finish its glide
                 setTimeout(() => {
                     progressWrap.style.display = 'none';
                     convertBtn.style.display = 'none';
-                    
-                    const resultUrl = URL.createObjectURL(result);
-                    previewImage.src = resultUrl; 
-                    
-                    downloadLink.href = resultUrl;
+                    const url = URL.createObjectURL(result);
+                    previewImage.src = url; 
+                    downloadLink.href = url;
                     downloadLink.download = currentFile.name.replace(/\.[^/.]+$/, "") + ".webp";
-                    
                     downloadLink.style.display = 'block';
                     stats.style.display = 'block';
                     resetBtn.style.display = 'block';
-                    
-                    const initialSize = (currentFile.size / 1024).toFixed(2);
-                    const finalSize = (result.size / 1024).toFixed(2);
-                    const saved = (((currentFile.size - result.size) / currentFile.size) * 100).toFixed(1);
-                    
-                    stats.innerHTML = `Original: ${initialSize}KB<br>Converted: ${finalSize}KB<br><strong style="color: var(--success);">Saved: ${saved}%</strong>`;
-                }, 2500); // Wait for the 2.5s transition to finish
+                    stats.innerHTML = `Original: ${(currentFile.size/1024).toFixed(2)}KB<br>Converted: ${(result.size/1024).toFixed(2)}KB<br><strong>Saved: ${(((currentFile.size - result.size)/currentFile.size)*100).toFixed(1)}%</strong>`;
+                }, 1500); // Matches transition duration
             },
             error(err) {
-                console.error("Compression error:", err);
+                console.error(err);
                 convertBtn.textContent = "Error! Try again.";
                 convertBtn.disabled = false;
-                progressWrap.style.display = 'none';
             },
         });
     });
+});
