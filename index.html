@@ -2,72 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Codon | WebP Converter</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
-    <style>
-        :root { --primary: #6366f1; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
-        
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            margin: 0; 
-        }
-
-        .container { 
-            background: var(--card); 
-            padding: 2rem; 
-            border-radius: 1rem; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
-            width: 90%; 
-            max-width: 400px; 
-            /* This ensures everything inside stays stacked in a clean column */
-            display: flex; 
-            flex-direction: column; 
-            gap: 1rem; 
-        }
-
-        h1 { margin: 0; color: var(--primary); text-align: center; }
-        
-        .upload-area { 
-            border: 2px dashed #475569; 
-            padding: 2rem; 
-            border-radius: 0.5rem; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            text-align: center;
-        }
-        .upload-area:hover { border-color: var(--primary); }
-        
-        button { 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            padding: 0.8rem 1.5rem; 
-            border-radius: 0.5rem; 
-            cursor: pointer; 
-            font-weight: bold; 
-            width: 100%; 
-            transition: 0.2s; 
-        }
-        button:disabled { background: #475569; cursor: not-allowed; }
-        
-        #stats { 
-            padding: 1rem; 
-            background: rgba(0,0,0,0.2); 
-            border-radius: 0.5rem; 
-            text-align: center; 
-            display: none; 
-        }
-        
-        #upload { display: none; }
-    </style>
 </head>
 <body>
 
@@ -86,48 +26,6 @@
     <div id="stats"></div>
 </div>
 
-<script>
-    const upload = document.getElementById('upload');
-    const convertBtn = document.getElementById('convert-btn');
-    const downloadLink = document.getElementById('download-link');
-    const stats = document.getElementById('stats');
-    const dropZone = document.getElementById('drop-zone');
-
-    upload.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            dropZone.textContent = "File: " + file.name;
-            convertBtn.disabled = false;
-            stats.style.display = 'none';
-            downloadLink.style.display = 'none';
-        }
-    });
-
-    convertBtn.addEventListener('click', () => {
-        const file = upload.files[0];
-        if (!file) return;
-
-        new Compressor(file, {
-            quality: 0.8,
-            mimeType: 'image/webp',
-            success(result) {
-                const url = URL.createObjectURL(result);
-                downloadLink.href = url;
-                downloadLink.download = file.name.replace(/\.[^/.]+$/, "") + ".webp";
-                
-                // Show elements
-                downloadLink.style.display = 'block';
-                stats.style.display = 'block';
-                
-                const initialSize = (file.size / 1024).toFixed(2);
-                const finalSize = (result.size / 1024).toFixed(2);
-                const saved = (((file.size - result.size) / file.size) * 100).toFixed(1);
-                
-                stats.innerHTML = `Original: ${initialSize}KB<br>Converted: ${finalSize}KB<br><strong>Saved: ${saved}%</strong>`;
-            },
-        });
-    });
-</script>
 <script src="script.js"></script>
 </body>
 </html>
