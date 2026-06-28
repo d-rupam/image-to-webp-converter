@@ -110,28 +110,6 @@ button:hover:not(:disabled) {
     background: #059669; 
 }
 
-/* --- Smooth "Water Flow" Progress Bar --- */
-.progress-wrap { 
-    width: 100%; 
-    height: 10px; /* Slightly thicker to see the water effect */
-    background: #334155; 
-    border-radius: 5px; 
-    overflow: hidden; 
-}
-
-.progress-bar { 
-    width: 0%; 
-    height: 100%; 
-    background: linear-gradient(90deg, #3b82f6, #6366f1);
-    /* No animation here - let JS control the flow */
-    transition: width 2.5s cubic-bezier(0.1, 0.7, 0.3, 1); 
-}
-
-/* This keyframe makes the gradient constantly slide, looking like a flowing pipe */
-@keyframes waterFlow {
-    0% { background-position: 100% 0; }
-    100% { background-position: -200% 0; }
-}
 
 /* --- Colorful "Convert Another" Button --- */
 .secondary-btn {
