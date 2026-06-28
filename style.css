@@ -189,18 +189,37 @@ button:hover:not(:disabled) {
     border: 2px solid var(--primary);
     color: var(--primary);
     padding: 0.8rem 1.5rem;
-    border-radius: 50px; /* This makes it fully rounded */
+    border-radius: 50px; 
     text-align: center;
     text-decoration: none;
     font-weight: bold;
-    display: inline-block; /* Allows it to be centered by the parent */
-    margin: 1.5rem auto;   /* auto left/right margin centers the button */
+    display: inline-block; 
+    margin: 1.5rem auto;   
     transition: all 0.3s;
-    width: auto;           /* Only as wide as the text needs */
+    width: auto;           
 }
 
 .back-btn:hover {
     background: var(--primary);
     color: white;
     transform: translateY(-2px);
+}
+
+
+.benefit-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.benefit-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.5rem;
+    color: #e2e8f0;
+}
+
+.benefit-list img {
+    flex-shrink: 0; /* Keeps the green.png from getting squished */
 }
