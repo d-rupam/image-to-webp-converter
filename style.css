@@ -14,10 +14,10 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     background: var(--bg); 
     color: var(--text); 
-    display: block; /* Removed flex */
+    display: block; 
     min-height: 100vh; 
     margin: 0; 
-    padding-top: 5vh; /* Gives the container some space from the top */
+    padding-top: 5vh; 
 }
 
 .container { 
@@ -30,7 +30,7 @@ body {
     display: flex; 
     flex-direction: column; 
     gap: 1.5rem; 
-    margin: 0 auto; /* This centers the container on the page */
+    margin: 0 auto; 
 }
 
 h1 { 
@@ -40,7 +40,7 @@ h1 {
     font-size: 1.5rem; 
 }
 
-/* --- The Drop Zone Canvas --- */
+
 .upload-area { 
     border: 2px dashed #475569; 
     padding: 1rem; 
@@ -66,15 +66,14 @@ h1 {
     background: rgba(99, 102, 241, 0.05); 
 }
 
-/* --- The Image Preview inside the Drop Zone --- */
 #preview-image {
     max-width: 100%;
-    max-height: 40vh; /* Keeps it strictly inside the box */
-    object-fit: contain; /* Fixes portrait issue without stretching */
+    max-height: 40vh; 
+    object-fit: contain; 
     border-radius: 0.25rem;
 }
 
-/* --- Buttons --- */
+
 button, .download-btn { 
     background: var(--primary); 
     color: white; 
@@ -110,22 +109,21 @@ button:hover:not(:disabled) {
 }
 
 
-/* --- Colorful "Convert Another" Button --- */
 .secondary-btn {
-    background: linear-gradient(135deg, #0ea5e9, #3b82f6); /* Vibrant blue-to-teal gradient */
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6); 
     border: none;
     color: white;
     margin-top: 0.5rem;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); /* Adds a nice glowing shadow */
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); 
 }
 
 .secondary-btn:hover {
     background: linear-gradient(135deg, #0284c7, #2563eb);
     box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
-    transform: translateY(-2px); /* Makes it lift up slightly when hovered */
+    transform: translateY(-2px); 
 }
 
-/* --- Stats Box --- */
+
 #stats { 
     padding: 1rem; 
     background: rgba(0,0,0,0.2); 
@@ -136,12 +134,12 @@ button:hover:not(:disabled) {
     line-height: 1.5;
 }
 
-/* Hide the native file input */
+
 #upload { 
     display: none; 
 }
 
-/* Footer Positioning */
+
 .footer-links {
     margin-top: 2rem;
     text-align: center;
@@ -162,11 +160,11 @@ button:hover:not(:disabled) {
 }
 
 .footer-links a img {
-    width: 30px; /* Standardize icon size */
+    width: 30px; 
     transition: transform 0.2s;
 }
 
-/* Only invert the GitHub icon to white */
+
 .github-icon {
     filter: invert(1);
 }
@@ -186,4 +184,23 @@ button:hover:not(:disabled) {
 }
 .seo-box h3 { color: var(--text); margin-top: 0; }
 
+.back-btn {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px; /* This makes it fully rounded */
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block; /* Allows it to be centered by the parent */
+    margin: 1.5rem auto;   /* auto left/right margin centers the button */
+    transition: all 0.3s;
+    width: auto;           /* Only as wide as the text needs */
+}
 
+.back-btn:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
