@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressWrap = document.getElementById('progress-wrap');
     const progressBar = document.getElementById('progress-bar');
     
-    // Preview Elements
-    const previewContainer = document.getElementById('preview-container');
+    // Updated Preview Elements (No more previewContainer)
+    const dropText = document.getElementById('drop-text');
     const previewImage = document.getElementById('preview-image');
 
     let currentFile = null; 
@@ -23,13 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         currentFile = file;
-        dropZone.textContent = "Loaded: " + file.name;
         convertBtn.disabled = false;
         
-        // Generate the Image Preview instantly
+        // Hide the text and show the image inside the box!
+        if (dropText) dropText.style.display = 'none';
+        
         const previewUrl = URL.createObjectURL(file);
         previewImage.src = previewUrl;
-        previewContainer.style.display = 'block';
+        previewImage.style.display = 'block';
         
         // Reset the UI for a new conversion
         stats.style.display = 'none';
@@ -123,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     progressBar.style.width = '100%';
                     progressBar.style.backgroundColor = '#10b981'; 
                     
-                    // Optional: Update the preview image with the compressed version
+                    // Update the preview image with the compressed version
                     const resultUrl = URL.createObjectURL(result);
                     previewImage.src = resultUrl; 
                     
