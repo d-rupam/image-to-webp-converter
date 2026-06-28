@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Codon | WebP Converter</title>
+    <!-- Include Compressor.js from a CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
+</head>
+<body>
+    <h1>🧬 Codon WebP Engine</h1>
+    <input type="file" id="upload" accept="image/*">
+    <br><br>
+    <a id="download" style="display:none;">Download WebP</a>
+
+    <script>
+        document.getElementById('upload').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            new Compressor(file, {
+                quality: 0.8,
+                mimeType: 'image/webp',
+                success(result) {
+                    const url = URL.createObjectURL(result);
+                    const link = document.getElementById('download');
+                    link.href = url;
+                    link.download = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+                    link.style.display = 'block';
+                    link.textContent = 'Download ' + result.name;
+                },
+            });
+        });
+    </script>
+</body>
+</html>
