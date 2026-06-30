@@ -35,9 +35,13 @@ body {
 
 h1 { 
     margin: 0; 
-    color: var(--primary); 
     text-align: center; 
     font-size: 1.5rem; 
+    
+    background: linear-gradient(90deg, #bb86fc 0%, #ff79c6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text; 
 }
 
 
