@@ -26,3 +26,5 @@ This utility allows for the aggressive compression of high-resolution imagery in
 
 ## ⚖️ Operational Principles
 This utility is built on the philosophy of **"Edge-First Engineering."** By minimizing payload size at the source, we ensure that every byte transported across the network is optimized for the end-user's experience.
+
+
