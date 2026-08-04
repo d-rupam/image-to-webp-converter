@@ -235,3 +235,69 @@ button:hover:not(:disabled) {
 .container {
     gap: 0.8rem; 
 }
+
+<style>
+    .rd-universal-banner {
+        width: 100%;
+        background: #0b0f19;
+        border-bottom: 1px dashed rgba(0, 229, 255, 0.4);
+        color: #94A3B8;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 13.5px;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        box-sizing: border-box;
+        position: relative; /* Pushes tool content down naturally without hiding it */
+        z-index: 9999;
+        text-align: center;
+    }
+
+    .rd-banner-pulse {
+        width: 8px;
+        height: 8px;
+        background-color: #00E5FF;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #00E5FF;
+        animation: rd-pulse 1.5s infinite;
+        flex-shrink: 0;
+    }
+
+    @keyframes rd-pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+
+    .rd-banner-text {
+        letter-spacing: 0.5px;
+    }
+
+    .rd-banner-link {
+        color: #00E5FF;
+        font-weight: bold;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: 1px solid rgba(0, 229, 255, 0.3);
+        padding: 5px 12px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+
+    .rd-banner-link:hover {
+        background: rgba(0, 229, 255, 0.1);
+        box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+        text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+    }
+
+    /* Mobile adjustments so it doesn't break on small screens */
+    @media (max-width: 650px) {
+        .rd-universal-banner {
+            flex-direction: column;
+            gap: 12px;
+            padding: 15px;
+        }
+    }
