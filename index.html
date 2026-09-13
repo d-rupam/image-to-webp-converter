@@ -5,34 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
     
     <title>Free Unlimited PNG/JPG to WebP Converter | No Ads, No Uploads, No Signup, Private & Fast</title>
     <meta name="description" content="Convert your PNG and JPG images to high-quality WebP format instantly. 100% free, client-side, and private—your files never leave your browser.">
     <meta name="keywords" content="PNG to WebP, JPG to WebP, image converter, free image compressor, reduce image size, private webp converter, client-side image tool, Image to WebP converter, Convert image to WebP, JPG to WebP converter, PNG to WebP converter, Online WebP converter, Free WebP converter, WebP image converter, Bulk image to WebP converter, WebP image compression, Convert PNG to WebP online, Convert JPG to WebP online, WebP file converter, WebP format converter, Image converter to WebP format, WebP converter tool, WebP image optimizer, WebP converter free download, High quality WebP converter, Fast WebP converter, Batch convert images to WebP, Best WebP converter online, WebP converter for Windows, WebP converter for Mac, WebP image converter app, Convert images to WebP format, WebP image converter software, Easy WebP converter, WebP converter without quality loss, Simple WebP converter, WebP image converter online free">
     
     <link rel="stylesheet" href="style.css?v=4">
+    
+    <!-- Core Conversion Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
     <link rel="preconnect" href="https://www.googletagmanager.com">
-<link rel="preconnect" href="https://www.google-analytics.com">
+    <link rel="preconnect" href="https://www.google-analytics.com">
 
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-J0KYK0PKV9"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J0KYK0PKV9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  gtag('config', 'G-J0KYK0PKV9');
-</script>
+      gtag('config', 'G-J0KYK0PKV9');
+    </script>
 
-<meta property="og:title" content="Free PNG/JPG to WebP Converter | Private & Fast">
-<meta property="og:description" content="Convert images to WebP locally in your browser with zero latency, no ads, and total data sovereignty.">
-<meta property="og:image" content="https://rupamdas.in/R.png">
-<meta property="og:url" content="https://operon.rupamdas.in/capsid/R.png">
+    <meta property="og:title" content="Free PNG/JPG to WebP Converter | Private & Fast">
+    <meta property="og:description" content="Convert images to WebP locally in your browser with zero latency, no ads, and total data sovereignty.">
+    <meta property="og:image" content="https://rupamdas.in/R.png">
+    <meta property="og:url" content="https://operon.rupamdas.in/capsid/R.png">
     
 </head>
 <body>
@@ -41,10 +44,12 @@
     <h1>Free Unlimited PNG/JPG to WebP Converter | No Ads, No Uploads, No Signup, Private & Fast</h1>
     
     <label for="upload" class="upload-area" id="drop-zone">
-        <span id="drop-text">Click, Drag, or Paste (CTRL+V) an image here</span>
+        <span id="drop-text">Click, Drag, or Paste (CTRL+V) image(s) here</span>
         <img id="preview-image" src="" alt="Image Preview" style="display: none;">
     </label>
-    <input type="file" id="upload" accept="image/*">
+    
+    <!-- ADDED: 'multiple' attribute for bulk uploads -->
+    <input type="file" id="upload" accept="image/*" multiple>
     
     
     <button id="convert-btn" disabled>Convert to WebP</button>
@@ -55,34 +60,34 @@
     
     <button id="reset-btn" class="secondary-btn" style="display:none;">Convert Another</button>
 
-<div class="seo-box">
-    <h3>Why use our PNG/JPG to WebP Converter?</h3>
-    <ul class="benefit-list">
-        <li><img src="green.png" width="16"> <strong>100% Free & Unlimited:</strong> No usage caps or hidden fees.</li>
-        <li><img src="green.png" width="16"> <strong>Ad-Free Experience:</strong> Zero intrusive ads or tracking scripts.</li>
-        <li><img src="green.png" width="16"> <strong>Client-Side Privacy:</strong> Images never touch a server; processing happens locally.</li>
-        <li><img src="green.png" width="16"> <strong>High-Speed Conversion:</strong> Near-instant optimization with zero latency.</li>
-        <li><img src="green.png" width="16"> <strong>Open Source:</strong> Transparent logic that anyone can audit.</li>
-    </ul>
-    <p style="margin-top: 1rem; color: #94a3b8; font-size: 0.8rem;">
-        <em>Unlike competitive tools that impose server upload limits, data mining, and aggressive interstitial ads, my utility focuses strictly on performance and data sovereignty.</em>
-    </p>
-</div>
+    <div class="seo-box">
+        <h3>Why use our PNG/JPG to WebP Converter?</h3>
+        <ul class="benefit-list">
+            <li><img src="green.png" width="16"> <strong>100% Free & Unlimited:</strong> No usage caps or hidden fees.</li>
+            <li><img src="green.png" width="16"> <strong>Ad-Free Experience:</strong> Zero intrusive ads or tracking scripts.</li>
+            <li><img src="green.png" width="16"> <strong>Client-Side Privacy:</strong> Images never touch a server; processing happens locally.</li>
+            <li><img src="green.png" width="16"> <strong>High-Speed Conversion:</strong> Near-instant optimization with zero latency.</li>
+            <li><img src="green.png" width="16"> <strong>Open Source:</strong> Transparent logic that anyone can audit.</li>
+        </ul>
+        <p style="margin-top: 1rem; color: #94a3b8; font-size: 0.8rem;">
+            <em>Unlike competitive tools that impose server upload limits, data mining, and aggressive interstitial ads, my utility focuses strictly on performance and data sovereignty.</em>
+        </p>
+    </div>
 
 
-<div style="display: block; width: 100%; background: transparent; color: #c9d1d9; font-family: 'Courier New', Courier, monospace; font-size: 14px; text-align: center; padding: 18px 20px; border-bottom: 1px dashed #00E5FF; margin: 0 0 20px 0; box-sizing: border-box; line-height: 1.6;">
-    
-    <span style="color: #00E5FF; font-size: 16px; font-weight: bold; margin-right: 5px;">&gt;&gt;</span> 
-    <strong style="color: #f1f5f9; letter-spacing: 0.5px;">Thank you for using this utility!</strong> 
-    <br><br>
-    <span style="color: #94A3B8;">If you found this tool helpful, explore my full suite of free calculators, scripts, and web utilities. Everything is built to be fast, open, and completely ad-free.</span>
-    <br><br>
-    
-    <a href="#" style="display: inline-block; color: #00E5FF; font-weight: bold; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; border: 1px dashed #00E5FF; padding: 8px 16px; border-radius: 4px; background: transparent; white-space: nowrap;">
-        Explore All Free Tools at rupamdas.in &rarr;
-    </a>
+    <div style="display: block; width: 100%; background: transparent; color: #c9d1d9; font-family: 'Courier New', Courier, monospace; font-size: 14px; text-align: center; padding: 18px 20px; border-bottom: 1px dashed #00E5FF; margin: 0 0 20px 0; box-sizing: border-box; line-height: 1.6;">
+        
+        <span style="color: #00E5FF; font-size: 16px; font-weight: bold; margin-right: 5px;">&gt;&gt;</span> 
+        <strong style="color: #f1f5f9; letter-spacing: 0.5px;">Thank you for using this utility!</strong> 
+        <br><br>
+        <span style="color: #94A3B8;">If you found this tool helpful, explore my full suite of free calculators, scripts, and web utilities. Everything is built to be fast, open, and completely ad-free.</span>
+        <br><br>
+        
+        <a href="#" style="display: inline-block; color: #00E5FF; font-weight: bold; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; border: 1px dashed #00E5FF; padding: 8px 16px; border-radius: 4px; background: transparent; white-space: nowrap;">
+            Explore All Free Tools at rupamdas.in &rarr;
+        </a>
 
-</div>
+    </div>
     
 </div>
 <div class="footer-links">
