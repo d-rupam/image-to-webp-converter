@@ -1,219 +1,169 @@
-// ==========================================
-// 1. INJECT DEPENDENCIES & STYLES (WEBP CONVERTER)
-// ==========================================
-(function initEnvironment() {
+document.addEventListener('DOMContentLoaded', () => {
+    // Inject ONLY the minimal structural CSS needed for the image cards
     const style = document.createElement('style');
     style.innerHTML = `
-        /* Dynamic Dropzone Shrinking */
-        #drop-zone { transition: padding 0.3s ease, min-height 0.3s ease; -webkit-tap-highlight-color: transparent; cursor: pointer; display: block; }
-        #drop-zone.has-files { padding: 1.25rem 1rem 1.25rem 1rem !important; margin-bottom: 0 !important; cursor: default; }
-
-        /* Grid Layout inside Dropzone */
-        .a4-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; width: 100%; padding: 0; margin: 0; }
-        
-        /* Rigid Fixed-Height Cards */
-        .a4-card { width: 110px; height: 160px; background-color: #121215; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 6px; position: relative; padding: 10px; text-align: center; display: block; transition: all 0.2s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.2); user-select: none; z-index: 5; }
-        .a4-card:hover { border-color: rgba(0, 229, 255, 0.5); transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0, 229, 255, 0.15); }
-        
-        /* Image Thumbnail styling */
-        .a4-icon-wrapper { height: 90px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: hidden; border-radius: 4px; background: #050505; }
+        .a4-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; width: 100%; margin-top: 15px; }
+        .a4-card { width: 100px; height: 140px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; position: relative; padding: 8px; text-align: center; user-select: none; }
+        .a4-card:hover { border-color: rgba(255, 255, 255, 0.3); }
+        .a4-icon-wrapper { height: 80px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 4px; background: rgba(0, 0, 0, 0.5); margin-bottom: 6px; }
         .a4-icon-wrapper img { width: 100%; height: 100%; object-fit: cover; }
-        .a4-icon { font-size: 2.5rem; color: #888; transition: color 0.2s; }
-        
-        .a4-name { font-size: 0.75rem; color: #e0e0e0; font-weight: 500; width: 100%; height: 38px; margin-top: 5px; padding-top: 6px; border-top: 1px solid rgba(255, 255, 255, 0.05); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space: normal; line-height: 1.3; word-break: break-word; }
-        
-        .a4-remove { position: absolute; top: -8px; right: -8px; background: #ff3366; color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 0.75rem; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.4); z-index: 10; transition: transform 0.2s;}
-        .a4-remove:hover { transform: scale(1.1); }
-        
-        .a4-add { border: 2px dashed rgba(0, 229, 255, 0.3); background: rgba(0, 229, 255, 0.02); color: #00E5FF; cursor: pointer; box-shadow: none; display: flex; flex-direction: column; justify-content: center; }
-        .a4-add:hover { border-color: #00E5FF; background: rgba(0, 229, 255, 0.05); transform: translateY(-3px); }
-        .a4-add .a4-icon { color: #00E5FF; font-size: 2rem; margin-bottom: 5px; }
-        .a4-add .a4-name { color: #00E5FF; font-weight: 600; border-top: none; height: auto; margin-top: 0; padding-top: 0; display: block; }
-
-        /* Action Container & Buttons */
-        .action-container { margin-top: 1.5rem !important; margin-bottom: 2rem; display: none; gap: 0.5rem; justify-content: center; flex-direction: column; align-items: center; }
-        .button-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; width: 100%; }
-        
-        .btn-primary { background-color: #00E5FF; color: #000; border: none; padding: 0.85rem 2.5rem; font-size: 1.05rem; font-weight: 700; font-family: 'Courier New', Courier, monospace; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(0, 229, 255, 0.2); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0, 229, 255, 0.4); }
-        .btn-primary:disabled { background-color: #333; color: #888; cursor: not-allowed; transform: none; box-shadow: none; }
-        
-        .btn-secondary { background-color: transparent; color: #e0e0e0; border: 1px solid rgba(255,255,255,0.1); padding: 0.85rem 1.75rem; font-size: 0.95rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-secondary:hover { border-color: #00E5FF; color: #00E5FF; background-color: rgba(0, 229, 255, 0.05); }
-        
-        /* Success Stats UI */
-        .success-message { width: 100%; text-align: center; color: #00E5FF; font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem; font-family: 'Courier New', Courier, monospace;}
-        .stats-flow { color: #94A3B8; font-size: 0.9rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: rgba(0, 229, 255, 0.03); padding: 15px 20px; border-radius: 8px; border: 1px solid rgba(0, 229, 255, 0.2); text-align: center; width: 100%; max-width: 400px; }
-        .stats-flow strong { color: #fff; }
+        .a4-name { font-size: 0.7rem; color: inherit; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-all; line-height: 1.2; }
+        .a4-remove { position: absolute; top: -6px; right: -6px; background: #ff3366; color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; z-index: 10; font-weight: bold; padding-bottom: 2px; }
+        .a4-add { border: 2px dashed rgba(255, 255, 255, 0.2); background: transparent; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .a4-add:hover { border-color: rgba(255, 255, 255, 0.5); }
     `;
     document.head.appendChild(style);
-})();
 
-// ==========================================
-// WAIT FOR HTML DOM TO FULLY LOAD
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-
-    // 2. STATE MANAGEMENT & DOM SETUP
-    let imageFiles = []; 
-
-    const dropzone = document.getElementById('drop-zone');
-    const fileInput = document.getElementById('upload');
+    const upload = document.getElementById('upload');
+    const convertBtn = document.getElementById('convert-btn');
+    const downloadLink = document.getElementById('download-link');
+    const stats = document.getElementById('stats');
+    const dropZone = document.getElementById('drop-zone');
+    const resetBtn = document.getElementById('reset-btn');
     const dropText = document.getElementById('drop-text');
+    const previewImage = document.getElementById('preview-image');
+
+    let currentFiles = [];
+
+    // Create the Grid Container inside your existing dropzone
+    const gridContainer = document.createElement('div');
+    gridContainer.className = 'a4-grid';
+    gridContainer.style.display = 'none';
+    dropZone.appendChild(gridContainer);
     
-    // Hide old HTML buttons to replace with our dynamic Action Container
-    document.getElementById('convert-btn').style.display = 'none';
-    document.getElementById('download-link').style.display = 'none';
-    document.getElementById('stats').style.display = 'none';
-    document.getElementById('reset-btn').style.display = 'none';
-    if(document.getElementById('preview-image')) document.getElementById('preview-image').style.display = 'none';
-
-    // Create the Grid Container inside the dropzone
-    const a4Grid = document.createElement('div');
-    a4Grid.className = 'a4-grid';
-    a4Grid.style.display = 'none';
-    dropzone.appendChild(a4Grid);
-
-    // Create the Action Container outside the dropzone
-    const actionContainer = document.createElement('div');
-    actionContainer.className = 'action-container';
-    dropzone.parentNode.insertBefore(actionContainer, dropzone.nextSibling);
-
-    function initActionUI() {
-        actionContainer.innerHTML = '';
-        const btnGroup = document.createElement('div');
-        btnGroup.className = 'button-group';
+    // Reset function
+    function resetUI() {
+        currentFiles = [];
+        upload.value = '';
+        dropText.style.display = 'block';
+        previewImage.style.display = 'none';
+        previewImage.src = '';
         
-        const actionBtn = document.createElement('button');
-        actionBtn.className = 'btn-primary';
-        actionBtn.innerHTML = '⚙️ Convert to WebP';
-        actionBtn.addEventListener('click', executeConversion);
+        gridContainer.style.display = 'none';
+        gridContainer.innerHTML = '';
+        dropZone.style.display = 'flex';
         
-        btnGroup.appendChild(actionBtn);
-        actionContainer.appendChild(btnGroup);
+        convertBtn.style.display = 'block';
+        convertBtn.textContent = "Convert to WebP";
+        convertBtn.disabled = true;
+        
+        downloadLink.style.display = 'none';
+        stats.style.display = 'none';
+        resetBtn.style.display = 'none';
     }
 
-    // 3. EVENT LISTENERS
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files && e.target.files.length > 0) {
-            handleFiles(e.target.files);
-            fileInput.value = ''; // Reset input so same file can be selected again
-        }
-    });
-
-    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.borderColor = '#00E5FF'; });
-    dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = ''; });
-    dropzone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropzone.style.borderColor = '';
-        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            handleFiles(e.dataTransfer.files);
-        }
-    });
-
-    window.addEventListener('paste', (e) => {
-        if (e.clipboardData && e.clipboardData.files.length > 0) handleFiles(e.clipboardData.files);
-    });
-
-    // 4. FILE HANDLING & UI RENDERING
-    function handleFiles(files) {
-        const newFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
-        if (newFiles.length === 0) {
-            alert('Invalid format. Please select valid images (JPG/PNG).');
-            return;
-        }
-        imageFiles = [...imageFiles, ...newFiles];
-        renderFileList();
-    }
-
-    function renderFileList() {
-        a4Grid.innerHTML = '';
+    // Process files and render cards
+    function renderGrid() {
+        gridContainer.innerHTML = '';
         
-        if (imageFiles.length === 0) {
-            dropzone.classList.remove('has-files');
+        if (currentFiles.length === 0) {
             dropText.style.display = 'block';
-            a4Grid.style.display = 'none';
-            actionContainer.style.display = 'none';
+            gridContainer.style.display = 'none';
+            convertBtn.disabled = true;
+            convertBtn.textContent = "Convert to WebP";
             return;
         }
         
-        dropzone.classList.add('has-files');
         dropText.style.display = 'none';
-        a4Grid.style.display = 'flex';
-        
-        if(actionContainer.innerHTML === '') initActionUI();
-        actionContainer.style.display = 'flex';
-        const actionBtn = actionContainer.querySelector('.btn-primary');
-        if(actionBtn) {
-            actionBtn.innerHTML = `⚙️ Convert ${imageFiles.length} File${imageFiles.length > 1 ? 's' : ''}`;
-        }
+        gridContainer.style.display = 'flex';
+        convertBtn.disabled = false;
+        convertBtn.textContent = `Convert ${currentFiles.length} File${currentFiles.length > 1 ? 's' : ''}`;
 
-        imageFiles.forEach((file, index) => {
-            const item = document.createElement('div');
-            item.className = 'a4-card';
+        currentFiles.forEach((file, index) => {
+            const card = document.createElement('div');
+            card.className = 'a4-card';
             
-            // Create object URL for thumbnail
             const thumbUrl = URL.createObjectURL(file);
-
-            item.innerHTML = `
-                <button class="a4-remove" title="Remove File">✖</button>
+            
+            card.innerHTML = `
+                <button class="a4-remove" title="Remove File">x</button>
                 <div class="a4-icon-wrapper">
-                    <img src="${thumbUrl}" alt="thumbnail">
+                    <img src="${thumbUrl}" alt="Preview">
                 </div>
                 <div class="a4-name" title="${file.name}">${file.name}</div>
             `;
             
-            // Remove functionality. preventDefault stops the label from opening file dialog.
-            const removeBtn = item.querySelector('.a4-remove');
-            removeBtn.onclick = (e) => {
-                e.preventDefault(); 
+            // Remove specific file
+            const removeBtn = card.querySelector('.a4-remove');
+            removeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
                 e.stopPropagation();
-                imageFiles.splice(index, 1);
-                renderFileList();
-            };
-
-            // Prevent clicks on the card from opening the file dialog
-            item.onclick = (e) => { e.preventDefault(); e.stopPropagation(); };
-
-            a4Grid.appendChild(item);
+                currentFiles.splice(index, 1);
+                renderGrid();
+            });
+            
+            // Prevent opening file dialog when clicking a card
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            
+            gridContainer.appendChild(card);
         });
-
-        // Add More Button Card
-        const addMoreCard = document.createElement('div');
-        addMoreCard.className = 'a4-card a4-add';
-        addMoreCard.onclick = (e) => {
+        
+        // "Add More" Button Card
+        const addMore = document.createElement('div');
+        addMore.className = 'a4-card a4-add';
+        addMore.innerHTML = `
+            <div style="font-size: 2rem; color: #888;">+</div>
+            <div class="a4-name" style="margin-top: 5px;">Add More</div>
+        `;
+        addMore.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            fileInput.click();
-        };
-        addMoreCard.innerHTML = `
-            <div class="a4-icon-wrapper" style="background: transparent; height: auto;">
-                <span class="a4-icon" style="color: #00E5FF;">+</span>
-            </div>
-            <div class="a4-name">Add More</div>
-        `;
-        a4Grid.appendChild(addMoreCard);
+            upload.click();
+        });
+        gridContainer.appendChild(addMore);
     }
 
-    window.resetTool = function() {
-        window.location.reload(); 
-    };
+    function processInputFiles(files) {
+        const validFiles = Array.from(files).filter(file => file && file.type.startsWith('image/'));
+        if (validFiles.length === 0) return;
+        currentFiles = [...currentFiles, ...validFiles];
+        renderGrid();
+    }
 
-    // 5. CLIENT-SIDE COMPRESSION & ZIPPING LOGIC
-    async function executeConversion(e) {
+    resetBtn.addEventListener('click', resetUI);
+
+    // Click upload
+    upload.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            processInputFiles(e.target.files);
+            upload.value = ''; // Reset input
+        }
+    });
+
+    // Drag and Drop
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); });
+    dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
-        if (imageFiles.length === 0) return;
+        if (e.dataTransfer.files.length > 0) processInputFiles(e.dataTransfer.files);
+    });
 
-        const actionBtn = actionContainer.querySelector('.btn-primary');
-        actionBtn.disabled = true;
-        actionBtn.innerHTML = '⏳ Processing...';
+    // Paste
+    window.addEventListener('paste', (e) => {
+        const items = e.clipboardData.items;
+        const files = [];
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].kind === 'file' && items[i].type.startsWith('image/')) {
+                files.push(items[i].getAsFile());
+            }
+        }
+        if (files.length > 0) processInputFiles(files);
+    });
 
+    // Conversion
+    convertBtn.addEventListener('click', async () => {
+        if (currentFiles.length === 0) return;
+        
+        convertBtn.disabled = true;
         let totalInitialSize = 0;
         let totalFinalSize = 0;
 
-        // SINGLE FILE PROCESSING (No ZIP needed)
-        if (imageFiles.length === 1) {
-            const file = imageFiles[0];
+        // SINGLE IMAGE COMPRESSION
+        if (currentFiles.length === 1) {
+            convertBtn.textContent = "Converting...";
+            const file = currentFiles[0];
             totalInitialSize = file.size;
 
             new Compressor(file, {
@@ -221,29 +171,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 mimeType: 'image/webp',
                 success(result) {
                     totalFinalSize = result.size;
+                    
+                    convertBtn.style.display = 'none';
+                    dropZone.style.display = 'none'; 
+                    
                     const url = URL.createObjectURL(result);
-                    const finalFileName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
-                    renderSuccessUI(url, finalFileName, totalInitialSize, totalFinalSize);
+                    downloadLink.href = url;
+                    downloadLink.download = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+                    downloadLink.textContent = "Download WebP";
+                    downloadLink.style.display = 'block';
+                    
+                    stats.style.display = 'block';
+                    resetBtn.style.display = 'block';
+                    resetBtn.textContent = "Convert Another";
+                    
+                    const initialSize = (totalInitialSize / 1024).toFixed(2);
+                    const finalSize = (totalFinalSize / 1024).toFixed(2);
+                    const saved = (((totalInitialSize - totalFinalSize) / totalInitialSize) * 100).toFixed(1);
+                    
+                    stats.innerHTML = `Original: ${initialSize}KB<br>Converted: ${finalSize}KB<br><strong>Saved: ${saved}%</strong>`;
                 },
                 error(err) {
                     console.error(err);
-                    alert("Error compressing file.");
-                    actionBtn.disabled = false;
-                    actionBtn.innerHTML = '⚙️ Try Again';
-                }
+                    convertBtn.textContent = "Error! Try again.";
+                    convertBtn.disabled = false;
+                },
             });
-        
-        // BULK FILE PROCESSING (JSZip)
+            
+        // BULK IMAGE COMPRESSION (ZIP)
         } else {
+            convertBtn.textContent = "Converting...";
             if (!window.JSZip) {
-                alert("JSZip library is loading. Please wait a moment.");
-                actionBtn.disabled = false;
-                actionBtn.innerHTML = `⚙️ Convert ${imageFiles.length} Files`;
+                alert("ZIP library is not loaded yet. Please wait a second.");
+                convertBtn.textContent = `Convert ${currentFiles.length} Files`;
+                convertBtn.disabled = false;
                 return;
             }
 
             const zip = new JSZip();
-            const conversionPromises = imageFiles.map(file => {
+            
+            const promises = currentFiles.map(file => {
                 totalInitialSize += file.size;
                 return new Promise((resolve) => {
                     new Compressor(file, {
@@ -256,48 +223,36 @@ document.addEventListener('DOMContentLoaded', () => {
                             resolve();
                         },
                         error(err) {
-                            console.error(`Skipping ${file.name}:`, err);
+                            console.error(`Error processing ${file.name}:`, err);
                             resolve(); 
                         }
                     });
                 });
             });
 
-            await Promise.all(conversionPromises);
-            actionBtn.innerHTML = '📦 Packaging ZIP...';
+            await Promise.all(promises);
+            convertBtn.textContent = "Packaging ZIP...";
 
             zip.generateAsync({ type: "blob" }).then(function(content) {
+                convertBtn.style.display = 'none';
+                dropZone.style.display = 'none'; 
+                
                 const url = URL.createObjectURL(content);
-                const finalFileName = "Operon_Rupam_Das_WebP_Converter.zip";
-                renderSuccessUI(url, finalFileName, totalInitialSize, totalFinalSize);
+                downloadLink.href = url;
+                downloadLink.download = "Operon_Rupam_Das_WebP_Converter.zip";
+                downloadLink.textContent = "Download ZIP Archive";
+                downloadLink.style.display = 'block';
+                
+                stats.style.display = 'block';
+                resetBtn.style.display = 'block';
+                resetBtn.textContent = "Convert Another Batch";
+                
+                const initialSizeMB = (totalInitialSize / (1024 * 1024)).toFixed(2);
+                const finalSizeMB = (totalFinalSize / (1024 * 1024)).toFixed(2);
+                const saved = (((totalInitialSize - totalFinalSize) / totalInitialSize) * 100).toFixed(1);
+                
+                stats.innerHTML = `Original: ${initialSizeMB}MB<br>Converted: ${finalSizeMB}MB<br><strong>Saved: ${saved}%</strong>`;
             });
         }
-    }
-
-    function renderSuccessUI(downloadUrl, fileName, initialSize, finalSize) {
-        dropzone.style.display = 'none'; // Hide the grid box
-        
-        const initialSizeMB = (initialSize / (1024 * 1024)).toFixed(2);
-        const finalSizeMB = (finalSize / (1024 * 1024)).toFixed(2);
-        const savedPercent = initialSize > 0 ? (((initialSize - finalSize) / initialSize) * 100).toFixed(1) : 0;
-        
-        actionContainer.innerHTML = `
-            <div class="success-message">
-                ✔ Optimization Complete
-            </div>
-            <div class="stats-flow">
-                <div>Original Size: <strong>${initialSizeMB} MB</strong></div>
-                <div>WebP Size: <strong>${finalSizeMB} MB</strong></div>
-                <div style="margin-top: 5px; color: #00E5FF;">Bandwidth Saved: <strong>${savedPercent}%</strong></div>
-            </div>
-            <div class="button-group">
-                <a href="${downloadUrl}" download="${fileName}" class="btn-primary">
-                    💾 Download ${imageFiles.length > 1 ? 'ZIP Archive' : 'WebP'}
-                </a>
-                <button class="btn-secondary" onclick="resetTool()">
-                    🔄 Convert More
-                </button>
-            </div>
-        `;
-    }
+    });
 });
